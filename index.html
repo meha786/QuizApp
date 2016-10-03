@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script>
+
+		var allQuestionsGlobal = 
+
+			[
+			
+			{question: "Who is President of the United Kingdom?", choices: ["David Cameron", "Gordon Brown", "Winston Churchill", "Tony Blair"], correctAnswer:0},
+			{question: "Who is President of the US?", choices: ["David Cameron", "Gordon Brown", "Winston Churchill", "Tony Blair"], correctAnswer:0},
+			
+			{question: "Who is President of the India?", choices: ["David Cameron", "Gordon Brown", "Winston Churchill", "Tony Blair"], correctAnswer:0}
+
+			];
+		
+		function getOptionForStringWithValue(str, i, value) {
+			return str + "<input type='radio' name=option"+i+" value='"+value+"'><BR>";
+		}
+
+		function getMultipleQuestionGlobalVars() {
+			var questionSet="";
+			var choices;
+			for(i = 0;i<allQuestionsGlobal.length;i++) {
+				question = "<B>Q " + (i+1) + "- " + allQuestionsGlobal[i].question + "</B><BR>";
+				choices = "";
+				for(j=0;j<allQuestionsGlobal[i].choices.length;j++) {
+					choices += getOptionForStringWithValue(allQuestionsGlobal[i].choices[j], i, allQuestionsGlobal[i].choices[j]) + "<BR>";
+				}
+
+				questionSet += question + choices + "<BR><BR><BR>";
+			}
+			
+			return questionSet;
+		}
+
+		function validateAnswer() {
+			if(isAnyQuestionUnattempted()) {
+				window.alert("Please answer all questions ");
+				return 2;
+			}
+
+			for(i = 0;i<allQuestionsGlobal.length; i++) {
+				var alloptions = document.getElementsByName('option'+i);
+
+				//get selected answer
+				var userAnswer = "";
+				for(j=0;j<alloptions.length;j++) {
+					if(alloptions[j].checked) {
+						userAnswer = alloptions[j].value;
+						break;
+					}
+				}
+
+				var actualAnswer = allQuestionsGlobal[i].choices[allQuestionsGlobal[i].correctAnswer];
+				
+				if(actualAnswer != userAnswer) {
+					return 0;
+				}
+			}
+
+			return 1;
+		}
+
+		function isAnyQuestionUnattempted() {
+			for(i = 0;i<allQuestionsGlobal.length; i++) {
+				var alloptions = document.getElementsByName('option'+i);
+
+				var answerMarked = false;
+				for(j=0;j<alloptions.length;j++) {
+					if(alloptions[j].checked) {
+						answerMarked = true;
+					}
+				}
+
+				if(!answerMarked) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		function submitAnswer() {
+			var isValid = validateAnswer();
+			if(isValid == 2) {
+				return;
+			}
+
+			if(isValid == 0) {
+				window.alert("Wrong answer");
+				return;
+			}
+
+			window.alert("Congratulation");
+		}
+
+
+	</script>
+</head>
+<body>
+
+<h1>Quiz time !!</h1>
+
+<p id="multiplequestionGlobal"></p>
+<button onclick="submitAnswer()">Submit</button>
+
+<script>
+	document.getElementById("multiplequestionGlobal").innerHTML = getMultipleQuestionGlobalVars();
+</script>
+</body>
+</html>
